@@ -38,10 +38,9 @@ public class ListPlaceHolder extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_place_holder); // Asegúrate de que este layout existe
+        setContentView(R.layout.activity_list_place_holder);
 
-        // Referencia al ListView en el layout
-        listView = findViewById(R.id.listViewPosts); // Debe coincidir con el ID en activity_list_place_holder.xml
+        listView = findViewById(R.id.listViewPosts);
         titlesList = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, titlesList);
         btnSalvar = findViewById(R.id.btnSalvar);
@@ -49,7 +48,6 @@ public class ListPlaceHolder extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
-        // Llamar al método para hacer la petición a la API
         SendData();
 
         btnSalvar.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +75,6 @@ public class ListPlaceHolder extends AppCompatActivity {
                                 titlesList.add(title);
                             }
 
-                            // Usar el nuevo adaptador personalizado
                             adapter = new PostAdapter(ListPlaceHolder.this, titlesList);
                             listView.setAdapter(adapter);
 
@@ -105,7 +102,7 @@ public class ListPlaceHolder extends AppCompatActivity {
         }
 
         try {
-            int postId = Integer.parseInt(input); // Convertir a número
+            int postId = Integer.parseInt(input);
             String url = "https://jsonplaceholder.typicode.com/posts/" + postId;
 
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -123,7 +120,6 @@ public class ListPlaceHolder extends AppCompatActivity {
                                     titlesList.add(title);
                                 }
 
-                                // Usar el nuevo adaptador personalizado
                                 adapter = new PostAdapter(ListPlaceHolder.this, titlesList);
                                 listView.setAdapter(adapter);
 
