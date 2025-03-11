@@ -3,6 +3,9 @@ import com.example.app2prestapi.adapters.PostAdapter;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -29,20 +32,30 @@ public class ListPlaceHolder extends AppCompatActivity {
     private ListView listView;
     private ArrayList<String> titlesList;
     private ArrayAdapter<String> adapter;
+    private EditText editTextSearch;
+    private Button btnSalvar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_place_holder); // Asegúrate de que este layout existe
+        setContentView(R.layout.activity_list_place_holder);
 
-        // Referencia al ListView en el layout
-        listView = findViewById(R.id.listViewPosts); // Debe coincidir con el ID en activity_list_place_holder.xml
+        listView = findViewById(R.id.listViewPosts);
         titlesList = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, titlesList);
+        btnSalvar = findViewById(R.id.btnSalvar);
+        editTextSearch = findViewById(R.id.editTextText3);
+
         listView.setAdapter(adapter);
 
-        // Llamar al método para hacer la petición a la API
         SendData();
+
+        btnSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buscarPost();
+            }
+        });
     }
 
     private void SendData() {
@@ -62,7 +75,6 @@ public class ListPlaceHolder extends AppCompatActivity {
                                 titlesList.add(title);
                             }
 
-                            // Usar el nuevo adaptador personalizado
                             adapter = new PostAdapter(ListPlaceHolder.this, titlesList);
                             listView.setAdapter(adapter);
 
@@ -80,6 +92,55 @@ public class ListPlaceHolder extends AppCompatActivity {
                 });
 
         requestQueue.add(stringRequest);
+    }
+
+    private void buscarPost() {String input = editTextSearch.getText().toString().trim();
+
+        if (input.isEmpty()) {
+            Toast.makeText(this, "Ingrese un número de post", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            int postId = Integer.parseInt(input);
+            String url = "https://jsonplaceholder.typicode.com/posts/" + postId;
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                String title = jsonObject.getString("title");
+                                String body = jsonObject.getString("body");
+
+                                titlesList.clear();
+
+                                for (int i = 0; i < 1; i++) {
+                                    titlesList.add(title);
+                                }
+
+                                adapter = new PostAdapter(ListPlaceHolder.this, titlesList);
+                                listView.setAdapter(adapter);
+
+                            } catch (JSONException e) {
+                                Log.e("JSON_ERROR", "Error procesando JSON: " + e.getMessage());
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("API_ERROR", "Error en la petición: " + error.getMessage());
+                            Toast.makeText(ListPlaceHolder.this, "No se encontró el post", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            requestQueue.add(stringRequest);
+
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Ingrese un número válido", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

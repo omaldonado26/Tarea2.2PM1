@@ -14,16 +14,32 @@
         android:gravity="center"
         android:textColor="#000000"/>
 
-    <Button
-        android:id="@+id/btnSalvar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Salvar"
-        android:layout_margin="10dp"
-        android:background="@android:color/holo_blue_light"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:textSize="18sp"/>
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editTextText3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Buscar post"
+            android:inputType="text"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btnSalvar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:background="@android:color/holo_blue_light"
+            android:text="Salvar"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listViewPosts"
